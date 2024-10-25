@@ -5,7 +5,7 @@ type Props = {
   name: string;
   type: string;
   placeholder: string;
-  mask: string;
+  mask?: string;
 }
 
 const props: Props = defineProps({
@@ -26,11 +26,14 @@ const props: Props = defineProps({
 
   mask: {
     type: String,
-    default: '',
   },
 });
 
 const { value, errorMessage } = useField(props.name as string);
+
+const attrs = computed(() => ({
+  'v-mask': props.mask ?? "",
+}));
 </script>
 
 <template>
@@ -39,9 +42,9 @@ const { value, errorMessage } = useField(props.name as string);
       <NuxtFloatLabel>
         <input
           v-model="value"
-          :type="type || 'text'"
+          :type="type"
           :placeholder="placeholder"
-          v-mask="props.mask"
+          v-mask="mask ?? null"
         />
       </NuxtFloatLabel>
     </div>
