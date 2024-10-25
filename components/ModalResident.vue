@@ -12,6 +12,37 @@ defineProps<Props>();
 
 const phoneMask = '+7 (###) ###-####';
 
+const options = [
+  {
+    label: 'Производственные площади',
+    value: 'production-areas',
+  },
+  {
+    label: 'Складские помещения',
+    value: 'warehouse-areas',
+  } , 
+    {
+    label: 'Офисы',
+    value: 'offices',
+  },
+    {
+    label: 'Торговые площади',
+    value: 'reatail-areas',
+  },
+    {
+    label: 'Выставочные площади',
+    value: 'exhibition-areas',
+  },
+  {
+    label: 'Сервисные станции',
+    value: 'service-stations',
+  },
+];
+
+const multiple = true;
+
+const selectedValues = ref([]);
+
 const { handleSubmit } = useForm({
   validationSchema: yup.object({
     name: yup.string()
@@ -59,6 +90,12 @@ const onSubmit = handleSubmit(values => {
         name="address"
         type="text"
         placeholder="Адрес"
+      />
+
+      <BaseSelect
+        :options="options"
+        :multiple="multiple"
+        v-model="selectedValues"
       />
 
       <button>Отправить</button>
