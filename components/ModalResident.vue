@@ -41,13 +41,13 @@ const options = [
 
 const multiple = true;
 
-const selectedValues = ref([]);
+const typePremises = ref([]);
 
 const { handleSubmit } = useForm({
   validationSchema: yup.object({
     name: yup.string()
       .required('Это поле обязательно для заполнения')
-      .min(8, 'Минимум 8 символов')
+      .min(5, 'Минимум 5 символов')
       .max(50, 'Максимум 50 символов'),
 
     phone: yup.string()
@@ -55,6 +55,11 @@ const { handleSubmit } = useForm({
       .matches(/^\+7 \(\d{3}\) \d{3}-\d{4}$/, `Формат телефона должен быть: ${phoneMask}`),
 
     address: yup.string().required(),
+
+    typePremises: yup.array()
+      .required('Выберите тип помещения')
+      .min(1, 'Выберите хотя бы один тип помещения')
+      .of(yup.string().oneOf(options.map(option => option.value), 'Неверный тип помещения'))
   }),
 });
 
@@ -72,7 +77,7 @@ const onSubmit = handleSubmit(values => {
       {{ title }}
     </h1>
 
-    <form @submit="onSubmit">
+    <form @submit.prevent="onSubmit">
       <InputFloatLabel
         name="name"
         type="text"
@@ -93,12 +98,13 @@ const onSubmit = handleSubmit(values => {
       />
 
       <BaseSelect
+        name="typePremises"
         :options="options"
         :multiple="multiple"
-        v-model="selectedValues"
+        v-model="typePremises"
       />
 
-      <button>Отправить</button>
+      <button type="submit">Отправить</button>
     </form>
   </VueFinalModal>
 </template>
