@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ModalsContainer, useModal } from 'vue-final-modal'
-import ModalResident from '~/components/ModalResident.vue';
+import BaseModal from '~/components/BaseModal.vue';
 
 const { open, close } = useModal({
-  component: ModalResident,
+  component: BaseModal,
   attrs: {
     title: 'Заполните заявку, чтобы стать резидентом',
     onConfirm: function() {

@@ -1,0 +1,179 @@
+<script setup lang="ts">
+import { useForm } from 'vee-validate';
+import * as yup from 'yup';
+
+const phoneMask = '+7 (###) ###-####';
+
+const options = [
+  {
+    label: 'Производственные площади',
+    value: 'production-areas',
+  },
+  {
+    label: 'Складские помещения',
+    value: 'warehouse-areas',
+  },
+  {
+    label: 'Офисы',
+    value: 'offices',
+  },
+  {
+    label: 'Торговые площади',
+    value: 'reatail-areas',
+  },
+  {
+    label: 'Выставочные площади',
+    value: 'exhibition-areas',
+  },
+  {
+    label: 'Сервисные станции',
+    value: 'service-stations',
+  },
+];
+
+const multiple = true;
+
+const validationSchema = yup.object({
+  name: yup.string()
+    .required('Это поле обязательно для заполнения')
+    .min(5, 'Минимум 5 символов')
+    .max(50, 'Максимум 50 символов'),
+
+  phone: yup.string()
+    .required('Телефон обязателен')
+    .matches(
+      /^\+7 \(\d{3}\) \d{3}-\d{4}$/,
+      `Формат телефона должен быть: ${phoneMask}`
+    ),
+
+  address: yup.string()
+    .required('Это поле обязательно для заполнения'),
+
+  areas: yup.array()
+    .required('Выберите тип помещения')
+    .min(1, 'Выберите хотя бы один тип помещения')
+    .of(yup.string().oneOf(options.map(option => option.value), 'Неверный тип помещения')),
+
+  areaFrom: yup.number().required('Поле обязательно для заполнения'),
+
+  areaTo: yup
+    .number()
+    .required('Поле обязательно для заполнения')
+    .moreThan(yup.ref('areaFrom'), 'Значение "до" должно быть больше значения "от"'),
+
+  rentFrom: yup.date()
+    .required('Дата начала обязательна')
+    .typeError('Некорректная дата'),
+
+  rentTo: yup.date()
+    .required('Дата окончания обязательна')
+    .typeError('Некорректная дата')
+    .min(yup.ref('rentFrom'), 'Дата окончания должна быть позже даты начала'),
+
+});
+
+const { handleSubmit } = useForm({
+  validationSchema,
+  initialValues: {
+    name: '',
+    phone: '',
+    address: '',
+    areas: [],
+    areaFrom: "0",
+    areaTo: "0",
+    rentFrom: '',
+    rentTo: '',
+  },
+});
+
+const { value: fieldNameValue, errorMessage: fieldNameError } = useField('name');
+const { value: fieldPhoneValue, errorMessage: fieldPhoneError } = useField('phone');
+const { value: fieldAddressValue, errorMessage: fieldAddressError } = useField('address');
+const { value: fieldAreasValue, errorMessage: fieldAreasError } = useField('areas');
+
+const { value: fieldAreaFrom, errorMessage: fieldAreaFromError } = useField('areaFrom');
+const { value: fieldAreaTo, errorMessage: fieldAreaToError } = useField('areaTo');
+
+const { value: fieldRentFrom, errorMessage: fieldRentFromError } = useField('rentFrom');
+const { value: fieldRentTo, errorMessage: fieldRentToError } = useField('rentTo');
+
+const onSubmit = handleSubmit(values => {
+  console.warn(JSON.stringify(values, null, 2));
+});
+</script>
+
+<template>
+  <form @submit.prevent="onSubmit">
+    <InputFloatLabel
+      :error="fieldNameError"
+    >
+      <BaseInput
+        v-model="fieldNameValue as string"
+        placeholder="Наименование организации / ИП"
+      />
+    </InputFloatLabel>
+
+    <InputFloatLabel
+      :error="fieldPhoneError"
+    >
+      <BaseInput
+        v-model="fieldPhoneValue as string"
+        :mask="phoneMask"
+        placeholder="Контактный телефон"
+      />
+    </InputFloatLabel>
+
+    <InputFloatLabel
+      :error="fieldAddressError"
+    >
+      <BaseInput
+        v-model="fieldAddressValue as string"
+        placeholder="Адрес"
+      />
+    </InputFloatLabel>
+
+    <BaseSelect
+      :options="options"
+      :multiple="multiple"
+      v-model="fieldAreasValue as Array<string>"
+      :error="fieldAreasError"
+    />
+
+    <BaseRange
+      v-model:from="fieldAreaFrom as string"
+      v-model:to="fieldAreaTo as string"
+      :error-from="fieldAreaFromError"
+      :error-to="fieldAreaToError"
+      label-from="от"
+      label-to="до"
+      type="number"
+    />
+
+    <BaseRange
+      v-model:from="fieldRentFrom as string"
+      v-model:to="fieldRentTo as string"
+      :error-from="fieldRentFromError"
+      :error-to="fieldRentToError"
+      label-from="с"
+      label-to="по"
+      type="date"
+    />
+
+    <button type="submit">Отправить</button>
+  </form>
+</template>
+
+<style lang="scss" module>
+.modalResident {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContent {
+  width: 100%;
+  max-width: 800px;
+  background-color: white;
+  padding: 40px;
+}
+</style>

@@ -2,10 +2,6 @@
 import { defineProps, defineEmits, watch, ref } from 'vue';
 
 const props = defineProps({
-  name: {
-    type: String,
-    required: true,
-  },
   options: {
     type: Array,
     required: true,
@@ -18,13 +14,14 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  error: {
+    type: String,
+  },
 });
 
 const emit = defineEmits(['update:modelValue']);
 
 const selectRef = ref(null);
-
-const { value, errorMessage } = useField(props.name);
 
 function updateValue(event) {
   const selectedOptions = Array.from(event.target.selectedOptions).map(option => option.value);
@@ -34,20 +31,13 @@ function updateValue(event) {
 watch(
   () => props.modelValue,
   (newValue) => {
-    if (newValue !== undefined) {
-      value.value = newValue;
-    }
-
     if (selectRef.value && props.multiple) {
       Array.from(selectRef.value.options).forEach((option) => {
         option.selected = newValue.includes(option.value);
       });
     }
   },
-  // { immediate: true },
 );
-
-console.warn('value', value.value);
 </script>
 
 <template>
@@ -66,7 +56,8 @@ console.warn('value', value.value);
       {{ option.label }}
     </option>
   </select>
-  <div class="error">
-    {{ errorMessage }}
+
+  <div v-if="props.error" class="error">
+    {{ props.error }}
   </div>
 </template>
