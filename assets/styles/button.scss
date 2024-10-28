@@ -7,7 +7,6 @@
   justify-content: center;
   height: 38px;
 
-  // width: 100%;
   margin: 0;
   padding: 0 40px;
 
@@ -43,8 +42,7 @@
   background: transparent;
   border: 2px solid var(--color-brand-primary);
 
-  &:hover,
-  &:focus {
+  &:hover {
     background: var(--color-brand-primary);
     color: var(--color-black-white-white-fixed);
   }

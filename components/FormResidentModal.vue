@@ -36,7 +36,7 @@ const closeModal = () => {
 .modalContent {
   width: 100%;
   max-width: 800px;
-  background-color: white;
+  background-color: var(--color-black-white-white-fixed);
   padding: 40px;
 }
 </style>

@@ -31,8 +31,6 @@ const options = [
   },
 ];
 
-const multiple = true;
-
 const emit = defineEmits<{
   (e: 'closeModal'): void;
 }>();
@@ -54,9 +52,9 @@ const validationSchema = yup.object({
     .required('Это поле обязательно для заполнения'),
 
   areas: yup.array()
-    .required('Выберите тип помещения')
+    .required('Выберите тип помещения из списка')
     .min(1, 'Выберите хотя бы один тип помещения')
-    .of(yup.string().oneOf(options.map(option => option.value), 'Неверный тип помещения')),
+    .of(yup.string().oneOf(options.map(option => option.value), 'Выберите тип помещения из списка')),
 
   areaFrom: yup.number()
     .required('Поле обязательно для заполнения')
@@ -103,7 +101,7 @@ const { value: fieldAreaTo, errorMessage: fieldAreaToError } = useField('areaTo'
 const { value: fieldRentFrom, errorMessage: fieldRentFromError } = useField('rentFrom');
 const { value: fieldRentTo, errorMessage: fieldRentToError } = useField('rentTo');
 
-const formSubmitted: Ref<boolean> = ref(true);
+const formSubmitted: Ref<boolean> = ref(false);
 const errorMessage: Ref<string | null> = ref(null);
 const successMessage: Ref<string | null> = ref('Форма успешно сохранена');
 
@@ -166,7 +164,7 @@ const onSubmit = handleSubmit(async (values) => {
     <div :class="$style.formGroup">
       <BaseSelect
         :options="options"
-        :multiple="multiple"
+        :multiple="false"
         v-model="fieldAreasValue as Array<string>"
         :error="fieldAreasError"
       >
