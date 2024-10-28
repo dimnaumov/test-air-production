@@ -7,17 +7,12 @@ type Props = {
 }
 
 defineProps<Props>();
-
-const onOpened = async () => {
-  await nextTick();
-};
 </script>
 
 <template>
   <VueFinalModal
     :class="$style.modalResident"
     :content-class="$style.modalContent"
-    @opened="onOpened"
   >
     <FormResident />
   </VueFinalModal>

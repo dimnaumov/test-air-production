@@ -41,23 +41,49 @@ watch(
 </script>
 
 <template>
-  <select
-    ref="select"
-    :multiple="multiple"
-    @change="updateValue"
-  >
-    <option value="">Выберите один из вариантов</option>
-    <option
-      v-for="option in options"
-      :key="option.value"
-      :value="option.value"
-      :selected="modelValue.includes(option.value)"
-    >
-      {{ option.label }}
-    </option>
-  </select>
+  <div :class="$style.label">
+    <slot name="label" />
+  </div>
 
-  <div v-if="props.error" class="error">
+  <div :class="$style.field">
+    <select
+      ref="select"
+      :multiple="multiple"
+      @change="updateValue"
+    >
+      <option value="" :disabled="Boolean(props.multiple)">
+        Выберите один из вариантов
+      </option>
+
+      <option
+        v-for="option in options"
+        :key="option.value"
+        :value="option.value"
+        :selected="modelValue.includes(option.value)"
+      >
+        {{ option.label }}
+      </option>
+    </select>
+  </div>
+
+  <div v-if="props.error" :class="$style.error">
     {{ props.error }}
   </div>
 </template>
+
+<style lang="scss" module>
+@use '~/assets/styles/form' as form;
+
+.label {
+  margin-bottom: 20px;
+}
+
+.field {
+  @include form.field;
+  padding-right: 0;
+}
+
+.error {
+  @include form.error;
+}
+</style>

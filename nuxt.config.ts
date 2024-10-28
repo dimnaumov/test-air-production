@@ -11,5 +11,13 @@ export default defineNuxtConfig({
   modules: [
     '@vee-validate/nuxt',
     'nuxt-float-label',
+    '@nuxtjs/google-fonts',
   ],
+
+  googleFonts: {
+    families: {
+      Montserrat: [300, 400, 500, 600, 700, 800],
+    },
+    display: 'swap',
+  },
 })

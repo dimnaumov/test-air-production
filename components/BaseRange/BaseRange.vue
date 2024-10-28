@@ -70,31 +70,70 @@ const valueTo = computed({
 </script>
 
 <template>
-  <div class="range">
-    <div class="from">
-      <div class="labelFrom">{{ props.labelFrom }}</div>
-
-      <BaseInput
-        v-model="valueFrom"
-        :type="props.type"
-      />
-
-      <div v-if="props.errorFrom" class="error">
+  <div :class="$style.label">
+    <slot name="label" />
+  </div>
+  <div :class="$style.range">
+    <div>
+      <div :class="$style.field">
+        <label for="from">{{ props.labelFrom }}</label>
+  
+        <BaseInput
+          v-model="valueFrom"
+          :type="props.type"
+          id="from"
+        />
+      </div>
+  
+      <div v-if="props.errorFrom" :class="$style.error">
         {{ props.errorFrom }}
       </div>
     </div>
 
-    <div class="to">
-      <div class="labelTo">{{ props.labelTo }}</div>
+    <div>
+      <div :class="$style.field">
+        <label for="to">{{ props.labelTo }}</label>
+  
+        <BaseInput
+          v-model="valueTo"
+          :type="props.type"
+          id="to"
+        />  
+      </div>
 
-      <BaseInput
-        v-model="valueTo"
-        :type="props.type"
-      />
-
-      <div v-if="props.errorTo" class="error">
+      <div v-if="props.errorTo" :class="$style.error">
         {{ props.errorTo }}
       </div>
     </div>
   </div>
 </template>
+
+<style lang="scss" module>
+@use '~/assets/styles/form' as form;
+
+.label {
+  margin-bottom: 20px;
+}
+
+.range {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.field {
+  @include form.field;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  align-items: center;
+
+  input {
+    text-align: right;
+  }
+}
+
+.error {
+  @include form.error;
+}
+</style>

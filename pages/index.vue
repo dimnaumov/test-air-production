@@ -14,13 +14,26 @@ const { open, close } = useModal({
 </script>
 
 <template>
-  <div>
-    <h1>Index.vue</h1>
-
-    <button @click="() => open()">
+  <div :class="$style.container">
+    <button @click="() => open()" :class="$style.button">
       Стать резидентом
     </button>
 
     <ModalsContainer />
   </div>
 </template>
+
+<style lang="scss" module>
+@use '~/assets/styles/button' as button;
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.button {
+  @include button.button-outline;
+}
+</style>

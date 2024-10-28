@@ -19,7 +19,7 @@ const options = [
   },
   {
     label: 'Торговые площади',
-    value: 'reatail-areas',
+    value: 'retail-areas',
   },
   {
     label: 'Выставочные площади',
@@ -54,7 +54,9 @@ const validationSchema = yup.object({
     .min(1, 'Выберите хотя бы один тип помещения')
     .of(yup.string().oneOf(options.map(option => option.value), 'Неверный тип помещения')),
 
-  areaFrom: yup.number().required('Поле обязательно для заполнения'),
+  areaFrom: yup.number()
+    .required('Поле обязательно для заполнения')
+    .min(1, 'Значение должно быть больше 0'),
 
   areaTo: yup
     .number()
@@ -104,76 +106,108 @@ const onSubmit = handleSubmit(values => {
 
 <template>
   <form @submit.prevent="onSubmit">
-    <InputFloatLabel
-      :error="fieldNameError"
-    >
-      <BaseInput
-        v-model="fieldNameValue as string"
-        placeholder="Наименование организации / ИП"
-      />
-    </InputFloatLabel>
+    <div :class="$style.formGroup">
+      <InputFloatLabel
+        :error="fieldNameError"
+      >
+        <BaseInput
+          v-model="fieldNameValue as string"
+          placeholder="Наименование организации / ИП"
+        />
+      </InputFloatLabel>
+    </div>
 
-    <InputFloatLabel
-      :error="fieldPhoneError"
-    >
-      <BaseInput
-        v-model="fieldPhoneValue as string"
-        :mask="phoneMask"
-        placeholder="Контактный телефон"
-      />
-    </InputFloatLabel>
+    <div :class="$style.formGroup">
+      <InputFloatLabel
+        :error="fieldPhoneError"
+      >
+        <BaseInput
+          v-model="fieldPhoneValue as string"
+          :mask="phoneMask"
+          placeholder="Контактный телефон"
+        />
+      </InputFloatLabel>
+    </div>
 
-    <InputFloatLabel
-      :error="fieldAddressError"
-    >
-      <BaseInput
-        v-model="fieldAddressValue as string"
-        placeholder="Адрес"
-      />
-    </InputFloatLabel>
+    <div :class="$style.formGroup">
+      <InputFloatLabel
+        :error="fieldAddressError"
+      >
+        <BaseInput
+          v-model="fieldAddressValue as string"
+          placeholder="Адрес"
+        />
+      </InputFloatLabel>
+    </div>
 
-    <BaseSelect
-      :options="options"
-      :multiple="multiple"
-      v-model="fieldAreasValue as Array<string>"
-      :error="fieldAreasError"
-    />
+    <div :class="$style.formGroup">
+      <BaseSelect
+        :options="options"
+        :multiple="multiple"
+        v-model="fieldAreasValue as Array<string>"
+        :error="fieldAreasError"
+      >
+        <template v-slot:label>
+          Тип помещения
+        </template>
+      </BaseSelect>
+    </div>
 
-    <BaseRange
-      v-model:from="fieldAreaFrom as string"
-      v-model:to="fieldAreaTo as string"
-      :error-from="fieldAreaFromError"
-      :error-to="fieldAreaToError"
-      label-from="от"
-      label-to="до"
-      type="number"
-    />
+    <div :class="$style.formGroup">
+      <BaseRange
+        v-model:from="fieldAreaFrom as string"
+        v-model:to="fieldAreaTo as string"
+        :error-from="fieldAreaFromError"
+        :error-to="fieldAreaToError"
+        label-from="от"
+        label-to="до"
+        type="number"
+      >
+        <template v-slot:label>
+           Площадь помещения (м<sup>2</sup>)
+        </template>
+      </BaseRange>
+    </div>
 
-    <BaseRange
-      v-model:from="fieldRentFrom as string"
-      v-model:to="fieldRentTo as string"
-      :error-from="fieldRentFromError"
-      :error-to="fieldRentToError"
-      label-from="с"
-      label-to="по"
-      type="date"
-    />
+    <div :class="$style.formGroup">
+      <BaseRange
+        v-model:from="fieldRentFrom as string"
+        v-model:to="fieldRentTo as string"
+        :error-from="fieldRentFromError"
+        :error-to="fieldRentToError"
+        label-from="с"
+        label-to="по"
+        type="date"
+      >
+        <template v-slot:label>
+          Дата начала аренды
+        </template>
+      </BaseRange>
+    </div>
 
-    <button type="submit">Отправить</button>
+    <div :class="$style.formFooter">
+      <button :class="$style.button" type="submit">Отправить</button>
+    </div>
   </form>
 </template>
 
 <style lang="scss" module>
-.modalResident {
+@use '~/assets/styles/button' as button;
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.formFooter {
+  margin-top: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.modalContent {
-  width: 100%;
-  max-width: 800px;
-  background-color: white;
-  padding: 40px;
+.button {
+  // @include button.button-outline;
+  @include button.button-primary;
 }
+
 </style>
