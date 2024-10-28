@@ -1,0 +1,53 @@
+@mixin button-master {
+  cursor: pointer;
+  user-select: none;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+
+  margin: 0;
+  padding: 0 40px;
+
+  font: inherit;
+  text-align: center;
+  text-decoration: none;
+
+  appearance: none;
+  border: none;
+  outline: none;
+  border-radius: 38px;
+}
+
+@mixin button-primary {
+  @include button-master;
+
+  color: var(--color-black-white-white-fixed);
+  background: var(--color-brand-primary);
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+
+  &:active {
+    filter: brightness(1.15);
+  }
+}
+
+@mixin button-outline {
+  @include button-master;
+
+  color: var(--color-brand-primary);
+  background: transparent;
+  border: 2px solid var(--color-brand-primary);
+
+  &:hover {
+    background: var(--color-brand-primary);
+    color: var(--color-black-white-white-fixed);
+  }
+
+  &:active {
+    filter: brightness(1.15);
+  }
+}

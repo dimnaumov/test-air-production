@@ -1,0 +1,38 @@
+html,
+body,
+#__nuxt,
+#__layout {
+  width: 100%;
+  height: 100%;
+}
+
+html {
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  color: var(--color-brand-primary);
+}
+
+:root {
+  // Brand
+  --color-brand-primary-dark: #1A263D;
+  --color-brand-primary: #174B7C;
+
+  // Additional
+  --color-additional-secondary: #F7F8F8;
+
+  // System
+  --color-system-error: #D02727;
+
+  // Other
+  --color-other-main-bg: #FFFFFF;
+
+  // BlackWhite
+  --color-black-white-black-fixed: #000000;
+  --color-black-white-white-fixed: #FFFFFF;
+}
