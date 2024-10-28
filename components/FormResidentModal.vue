@@ -7,6 +7,14 @@ type Props = {
 }
 
 defineProps<Props>();
+
+const emit = defineEmits<{
+  (e: 'confirm'): void;
+}>();
+
+const closeModal = () => {
+  emit('confirm');
+}
 </script>
 
 <template>
@@ -14,7 +22,7 @@ defineProps<Props>();
     :class="$style.modalResident"
     :content-class="$style.modalContent"
   >
-    <FormResident />
+    <FormResident @closeModal="closeModal" />
   </VueFinalModal>
 </template>
 

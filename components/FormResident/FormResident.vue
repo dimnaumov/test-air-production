@@ -33,6 +33,10 @@ const options = [
 
 const multiple = true;
 
+const emit = defineEmits<{
+  (e: 'closeModal'): void;
+}>();
+
 const validationSchema = yup.object({
   name: yup.string()
     .required('Это поле обязательно для заполнения')
@@ -99,13 +103,32 @@ const { value: fieldAreaTo, errorMessage: fieldAreaToError } = useField('areaTo'
 const { value: fieldRentFrom, errorMessage: fieldRentFromError } = useField('rentFrom');
 const { value: fieldRentTo, errorMessage: fieldRentToError } = useField('rentTo');
 
-const onSubmit = handleSubmit(values => {
-  console.warn(JSON.stringify(values, null, 2));
+const formSubmitted: Ref<boolean> = ref(true);
+const errorMessage: Ref<string | null> = ref(null);
+const successMessage: Ref<string | null> = ref('Форма успешно сохранена');
+
+const onSubmit = handleSubmit(async (values) => {
+  try {
+    const response = await $fetch('/api/form', {
+      method: 'POST',
+      body: values,
+    });
+
+    if (response.success) {
+      successMessage.value = response.message || 'Форма успешно сохранена';
+      formSubmitted.value = true;
+    } else {
+      errorMessage.value = response.message || 'Неизвестная ошибка при сохранении формы';
+    }
+  } catch (error) {
+    console.error('Ошибка сохранения формы:', error);
+    errorMessage.value = 'Произошла ошибка при отправке формы. Попробуйте еще раз.';
+  }
 });
 </script>
 
 <template>
-  <form @submit.prevent="onSubmit">
+  <form v-if="!formSubmitted" @submit.prevent="onSubmit">
     <div :class="$style.formGroup">
       <InputFloatLabel
         :error="fieldNameError"
@@ -164,7 +187,7 @@ const onSubmit = handleSubmit(values => {
         type="number"
       >
         <template v-slot:label>
-           Площадь помещения (м<sup>2</sup>)
+          Площадь помещения (м<sup>2</sup>)
         </template>
       </BaseRange>
     </div>
@@ -186,28 +209,65 @@ const onSubmit = handleSubmit(values => {
     </div>
 
     <div :class="$style.formFooter">
-      <button :class="$style.button" type="submit">Отправить</button>
+      <div v-if="errorMessage" :class="$style.error">
+        {{ errorMessage }}
+      </div>
+
+      <div class="buttons">
+        <button :class="$style.button" type="submit">Отправить</button>
+      </div>
     </div>
   </form>
+
+  <div v-if="formSubmitted" :class="$style.success">
+    <div :class="$style.successMessage">
+      {{ successMessage }}
+    </div>
+
+    <button :class="$style.button" @click="emit('closeModal')">Закрыть</button>
+  </div>
 </template>
 
 <style lang="scss" module>
 @use '~/assets/styles/button' as button;
+@use '~/assets/styles/form' as form;
+@use '~/assets/styles/fonts' as fonts;
 
 .formGroup {
   margin-bottom: 20px;
 }
 
 .formFooter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-top: 40px;
+}
+
+.buttons {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .button {
-  // @include button.button-outline;
   @include button.button-primary;
 }
 
+.error {
+  @include form.error;
+  margin-bottom: 8px;
+}
+
+.success {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.successMessage {
+  @include fonts.text-l;
+  margin-bottom: 20px;
+}
 </style>
