@@ -1,17 +1,11 @@
 <script setup lang="ts">
 type Props = {
-  modelValue: string;
   type: string;
   placeholder?: string;
   mask?: string;
 }
 
-const props: Props = defineProps({
-  modelValue: {
-    type: [String],
-    required: true,
-  },
-
+defineProps({
   type: {
     type: String,
     default: 'text',
@@ -27,16 +21,7 @@ const props: Props = defineProps({
   },
 });
 
-const emit = defineEmits(['update:modelValue']);
-
-const value = computed({
-  get() {
-    return props.modelValue;
-  },
-  set(value) {
-    emit('update:modelValue', value.toString());
-  }
-});
+const value = defineModel();
 </script>
 
 <template>

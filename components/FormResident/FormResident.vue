@@ -83,8 +83,8 @@ const { handleSubmit } = useForm({
     phone: '',
     address: '',
     areas: [],
-    areaFrom: "0",
-    areaTo: "0",
+    areaFrom: 0,
+    areaTo: 0,
     rentFrom: '',
     rentTo: '',
   },
@@ -106,6 +106,9 @@ const errorMessage: Ref<string | null> = ref(null);
 const successMessage: Ref<string | null> = ref('Форма успешно сохранена');
 
 const onSubmit = handleSubmit(async (values) => {
+
+  console.warn('values', values);
+  
   try {
     const response = await $fetch('/api/form', {
       method: 'POST',
@@ -176,8 +179,8 @@ const onSubmit = handleSubmit(async (values) => {
 
     <div :class="$style.formGroup">
       <BaseRange
-        v-model:from="fieldAreaFrom as string"
-        v-model:to="fieldAreaTo as string"
+        v-model:from="fieldAreaFrom"
+        v-model:to="fieldAreaTo"
         :error-from="fieldAreaFromError"
         :error-to="fieldAreaToError"
         label-from="от"
@@ -192,8 +195,8 @@ const onSubmit = handleSubmit(async (values) => {
 
     <div :class="$style.formGroup">
       <BaseRange
-        v-model:from="fieldRentFrom as string"
-        v-model:to="fieldRentTo as string"
+        v-model:from="fieldRentFrom"
+        v-model:to="fieldRentTo"
         :error-from="fieldRentFromError"
         :error-to="fieldRentToError"
         label-from="с"
@@ -232,7 +235,9 @@ const onSubmit = handleSubmit(async (values) => {
 @use '~/assets/styles/fonts' as fonts;
 
 .formGroup {
-  margin-bottom: 20px;
+  & + & {
+    margin-bottom: 20px;
+  }
 }
 
 .formFooter {

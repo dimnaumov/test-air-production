@@ -1,8 +1,6 @@
 <script setup lang="ts">
 
 type Props = {
-  from: string;
-  to: string;
   labelFrom: string;
   labelTo: string;
   errorFrom: string;
@@ -11,16 +9,6 @@ type Props = {
 }
 
 const props: Props = defineProps({
-  from: {
-    type: [String],
-    default: '',
-  },
-
-  to: {
-    type: [String],
-    default: '',
-  },
-
   labelFrom: {
     type: String,
     default: '',
@@ -47,39 +35,22 @@ const props: Props = defineProps({
   },
 });
 
-const emit = defineEmits(['update:from', 'update:to']);
-
-const valueFrom = computed({
-  get() {
-    return props.from;
-  },
-  set(value) {
-    emit('update:from', value);
-  }
-});
-
-const valueTo = computed({
-  get() {
-    return props.to;
-  },
-  set(value) {
-    emit('update:to', value);
-  }
-});
-
+const from = defineModel('from');
+const to = defineModel('to');
 </script>
 
 <template>
-  <div :class="$style.label">
+  <div v-if="$slots.label" :class="$style.label">
     <slot name="label" />
   </div>
+
   <div :class="$style.range">
     <div>
       <div :class="$style.field">
         <label for="from">{{ props.labelFrom }}</label>
   
         <BaseInput
-          v-model="valueFrom"
+          v-model="from"
           :type="props.type"
           id="from"
         />
@@ -95,7 +66,7 @@ const valueTo = computed({
         <label for="to">{{ props.labelTo }}</label>
   
         <BaseInput
-          v-model="valueTo"
+          v-model="to"
           :type="props.type"
           id="to"
         />  
