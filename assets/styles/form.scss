@@ -42,7 +42,7 @@ label {
 @mixin field {
   padding: 0px 20px 0px 20px;
   border-radius: 6px;
-  border: 2px solid var( --color-additional-secondary);
+  border: 2px solid var(--color-additional-secondary);
 }
 
 @mixin error {
