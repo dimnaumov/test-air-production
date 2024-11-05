@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
+import AutocompleteInput from '@/components/AutocompeteInput/AutocompleteInput.vue';
 
 const phoneMask = '+7 (###) ###-####';
 
@@ -135,7 +136,7 @@ const onSubmit = handleSubmit(async (values) => {
         :error="fieldNameError"
       >
         <BaseInput
-          v-model="fieldNameValue as string"
+          v-model="fieldNameValue"
           placeholder="Наименование организации / ИП"
         />
       </InputFloatLabel>
@@ -146,7 +147,7 @@ const onSubmit = handleSubmit(async (values) => {
         :error="fieldPhoneError"
       >
         <BaseInput
-          v-model="fieldPhoneValue as string"
+          v-model="fieldPhoneValue"
           :mask="phoneMask"
           placeholder="Контактный телефон"
         />
@@ -154,14 +155,11 @@ const onSubmit = handleSubmit(async (values) => {
     </div>
 
     <div :class="$style.formGroup">
-      <InputFloatLabel
+      <AutocompleteInput
+        v-model="fieldAddressValue"
+        placeholder="Адрес"
         :error="fieldAddressError"
-      >
-        <BaseInput
-          v-model="fieldAddressValue as string"
-          placeholder="Адрес"
-        />
-      </InputFloatLabel>
+      />
     </div>
 
     <div :class="$style.formGroup">
@@ -236,7 +234,7 @@ const onSubmit = handleSubmit(async (values) => {
 
 .formGroup {
   & + & {
-    margin-bottom: 20px;
+    margin-top: 20px;
   }
 }
 

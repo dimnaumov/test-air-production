@@ -22,6 +22,12 @@ defineProps({
 });
 
 const value = defineModel();
+
+const inputElement: Ref<HTMLInputElement | null> = ref(null);
+
+defineExpose({
+  inputElement,
+});
 </script>
 
 <template>
@@ -30,5 +36,6 @@ const value = defineModel();
     :type="type"
     :placeholder="placeholder"
     v-mask="mask ?? null"
+    ref="inputElement"
   />
 </template>
